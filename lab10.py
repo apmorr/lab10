@@ -22,7 +22,7 @@ class EdgeSet:
     def add_edge(self, e):
         u, v = e
         if u not in self._V or v not in self._V:
-            raise KeyError(f"Vertices {u} and {v} must be in the graph")
+            raise KeyError(f"Vertices {e} must be in the graph")
         self._E.add(e)
 
     def remove_edge(self, e):
@@ -37,41 +37,41 @@ class EdgeSet:
 class AdjacencySet:
     def __init__(self, V, E):
         self._V = set()
-        self.nbrs = {}
+        self._neighbors = {}
         for v in V:
             self.add_vertex(v)
         for e in E:
             self.add_edge(e)
 
     def Testing(self):
-        return self._V, self.nbrs
+        return self._V, self._neighbors
 
 
     def add_vertex(self, v):
         self._V.add(v)
-        self.nbrs[v] = set()
+        self._neighbors[v] = set()
 
     def remove_vertex(self, v):
         if v not in self._V:
             raise KeyError(f"Vertex {v} not in graph")
-        del self.nbrs[v]
+        del self._neighbors[v]
         self._V.remove(v)
         for u in self._V:
-            self.nbrs[u] = {w for w in self.nbrs[u] if w != v}
+            self._neighbors[u] = {w for w in self._neighbors[u] if w != v}
 
 
     def add_edge(self, w):
         u, v = w
         if u not in self._V or v not in self._V:
             raise KeyError(f"Vertices {w} must be in the graph")
-        self.nbrs[u].add(v)
+        self._neighbors[u].add(v)
 
     def remove_edge(self, w):
         u, v = w
         if u not in self._V or v not in self._V:
             raise KeyError(f"Vertices {w} must be in the graph")
-        if v in self.nbrs[u]:
-            self.nbrs[u].remove(v)
+        if v in self._neighbors[u]:
+            self._neighbors[u].remove(v)
 
 class Graph_ES(EdgeSet):
     def __init__(self, vv, ee):
@@ -90,7 +90,7 @@ class Graph_ES(EdgeSet):
         return len(self._V)
 
 class Graph_AS(AdjacencySet):
-    def __init__(selfself, vv, ee):
+    def __init__(self, vv, ee):
         super().__init__(vv, ee)
 
     def vertices(self):
@@ -98,7 +98,7 @@ class Graph_AS(AdjacencySet):
 
     def edges(self):
         for u in self._V:
-            for v in self.nbrs[u]:
+            for v in self._neighbors[u]:
                 yield (u, v)
 
     def __contains__(self, v):
@@ -158,7 +158,7 @@ if __name__ == '__main__':
     print("PASSED!")
 
     print("Checking neighbors Test: ", end="")
-    assert (g.nbrs[4] == {1, 3, 5})
+    assert (g._neighbors[4] == {1, 3, 5})
     print("PASSED!")
 
     print("Newly added vertex with edges Test: ", end="")
@@ -166,12 +166,12 @@ if __name__ == '__main__':
     for e in range (2,4):
         g.add_edge((10, e))
 
-    assert (g.nbrs[10] == {2, 3})
+    assert (g._neighbors[10] == {2, 3})
     print("PASSED!")
 
     print("Removing edge Test: ", end="")
     g.remove_edge((5,6))
     g.remove_edge((6,5))
-    assert (g.nbrs[5] == {3, 4})
-    assert (g.nbrs[6] == {3})
+    assert (g._neighbors[5] == {3, 4})
+    assert (g._neighbors[6] == {3})
     print("PASSED!")
