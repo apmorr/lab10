@@ -41,7 +41,11 @@ class AdjacencySet:
         for v in V:
             self.add_vertex(v)
         for e in E:
-            self.add_edge(*e)
+            self.add_edge(e)
+
+    def Testing(self):
+        return self._V, self.nbrs
+
 
     def add_vertex(self, v):
         self._V.add(v)
@@ -56,14 +60,16 @@ class AdjacencySet:
             self.nbrs[u] = {w for w in self.nbrs[u] if w != v}
 
 
-    def add_edge(self, v):
+    def add_edge(self, w):
+        u, v = w
         if u not in self._V or v not in self._V:
-            raise KeyError(f"Vertices {u} and {v} must be in the graph")
+            raise KeyError(f"Vertices {w} must be in the graph")
         self.nbrs[u].add(v)
 
-    def remove_edge(self, u, v):
+    def remove_edge(self, w):
+        u, v = w
         if u not in self._V or v not in self._V:
-            raise KeyError(f"Vertices {u} and {v} must be in the graph")
+            raise KeyError(f"Vertices {w} must be in the graph")
         if v in self.nbrs[u]:
             self.nbrs[u].remove(v)
 
@@ -145,6 +151,7 @@ if __name__ == '__main__':
     print()
     print("************ ADJACENCYSET TESTS ************ ")
     g = Graph_AS(vs, es)
+    #print(g.Testing())
 
     print("Checking vertices Test: ", end="")
     assert (g._V == {1, 2, 3, 4, 5, 6})
@@ -163,8 +170,8 @@ if __name__ == '__main__':
     print("PASSED!")
 
     print("Removing edge Test: ", end="")
-    #g.remove_edge((5,6))
-    #g.remove_edge((6,5))
-    #assert (g.nbrs[5] == {3, 4})
-    #assert (g.nbrs[6] == {3})
+    g.remove_edge((5,6))
+    g.remove_edge((6,5))
+    assert (g.nbrs[5] == {3, 4})
+    assert (g.nbrs[6] == {3})
     print("PASSED!")
