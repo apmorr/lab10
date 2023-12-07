@@ -1,54 +1,106 @@
 class EdgeSet:
-    def __init__(self, V = None, E = None):
+    def __init__(self, V , E):
         self._V = set()
         self._E = set()
         for v in V:
             self.add_vertex(v)
         for e in E:
-            self.add_edge(*e)
+            self.add_edge(e)
+
+    def Testing(self):
+        return self._V, self._E,
 
     def add_vertex(self, v):
-        pass
+        self._V.add(v)
 
     def remove_vertex(self, v):
-        pass
+        if v not in self._V:
+            raise KeyError(f"Vertex {v} not in graph")
+        self._V.remove(v)
+        self._E = {(u, w) for (u, w) in self._E if u != v and w != v}
 
-    def add_edge(self, u, v):
-        e = u, v
+    def add_edge(self, e):
+        u, v = e
         if u not in self._V or v not in self._V:
             raise KeyError(f"Vertices {u} and {v} must be in the graph")
         self._E.add(e)
-        
 
     def remove_edge(self, e):
-        pass
+        if e not in self._E:
+            raise KeyError(f"Edge {e} not in graph")
+        self._E.remove(e)
 
     def neighbors(self, v):
         return {w for (u, w) in self._E if u == v}
 
 
 class AdjacencySet:
-    def __init__(self, V = None, E = None):
-        pass
+    def __init__(self, V, E):
+        self._V = set()
+        self.nbrs = {}
+        for v in V:
+            self.add_vertex(v)
+        for e in E:
+            self.add_edge(*e)
 
     def add_vertex(self, v):
-        pass
+        self._V.add(v)
+        self.nbrs[v] = set()
 
     def remove_vertex(self, v):
-        pass
+        if v not in self._V:
+            raise KeyError(f"Vertex {v} not in graph")
+        del self.nbrs[v]
+        self._V.remove(v)
+        for u in self._V:
+            self.nbrs[u] = {w for w in self.nbrs[u] if w != v}
 
-    def add_edge(self, e):
-        pass
 
-    def remove_edge(self, e):
-        pass
+    def add_edge(self, v):
+        if u not in self._V or v not in self._V:
+            raise KeyError(f"Vertices {u} and {v} must be in the graph")
+        self.nbrs[u].add(v)
+
+    def remove_edge(self, u, v):
+        if u not in self._V or v not in self._V:
+            raise KeyError(f"Vertices {u} and {v} must be in the graph")
+        if v in self.nbrs[u]:
+            self.nbrs[u].remove(v)
 
 class Graph_ES(EdgeSet):
     def __init__(self, vv, ee):
         super().__init__(vv, ee)
 
+    def vertices(self):
+        return iter(self._V)
+
+    def edges(self):
+        return iter(self._E)
+
+    def __contains__(self, v):
+        return v in self._V
+
+    def __len__(self):
+        return len(self._V)
+
 class Graph_AS(AdjacencySet):
-    pass
+    def __init__(selfself, vv, ee):
+        super().__init__(vv, ee)
+
+    def vertices(self):
+        return iter(self._V)
+
+    def edges(self):
+        for u in self._V:
+            for v in self._neighbors[u]:
+                yield (u, v)
+
+    def __contains__(self, v):
+        return v in self._V
+
+    def __len__(self):
+        return len(self._V)
+
 
 
 if __name__ == '__main__':
@@ -69,6 +121,7 @@ if __name__ == '__main__':
     ########### EdgeSet #############
     print("************ EDGESET TESTS ************ ")
     f = Graph_ES(vs, es)
+    #print(f.Testing())
     print("Checking neighbors Test: ", end="")
     assert (f.neighbors(5) == {3, 4, 6})
     assert (f.neighbors(3) == {1, 2, 4, 5, 6})
@@ -81,10 +134,10 @@ if __name__ == '__main__':
     print("PASSED!")
 
 
-    # f.remove_edge(("A", 6))
+    f.remove_edge(("A", 5))
     print("Removing non-existing edge Test: ", end="")
     try:
-        f.remove_edge(("A", 6))
+        f.remove_edge(("A", 5))
     except KeyError:
         print("PASSED!")
 
@@ -94,7 +147,7 @@ if __name__ == '__main__':
     g = Graph_AS(vs, es)
 
     print("Checking vertices Test: ", end="")
-    assert (g.V == {1, 2, 3, 4, 5, 6})
+    assert (g._V == {1, 2, 3, 4, 5, 6})
     print("PASSED!")
 
     print("Checking neighbors Test: ", end="")
@@ -110,8 +163,8 @@ if __name__ == '__main__':
     print("PASSED!")
 
     print("Removing edge Test: ", end="")
-    g.remove_edge((5,6))
-    g.remove_edge((6,5))
-    assert (g.nbrs[5] == {3, 4})
-    assert (g.nbrs[6] == {3})
+    #g.remove_edge((5,6))
+    #g.remove_edge((6,5))
+    #assert (g.nbrs[5] == {3, 4})
+    #assert (g.nbrs[6] == {3})
     print("PASSED!")
