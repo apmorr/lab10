@@ -13,8 +13,8 @@ class EdgeSet:
     def remove_vertex(self, v):
         pass
 
-    def add_edge(self, e):
-        u, v = e
+    def add_edge(self, u, v):
+        e = u, v
         if u not in self._V or v not in self._V:
             raise KeyError(f"Vertices {u} and {v} must be in the graph")
         self._E.add(e)
