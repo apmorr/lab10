@@ -7,8 +7,6 @@ class EdgeSet:
         for e in E:
             self.add_edge(e)
 
-    def Testing(self):
-        return self._V, self._E,
 
     def add_vertex(self, v):
         self._V.add(v)
@@ -42,10 +40,6 @@ class AdjacencySet:
             self.add_vertex(v)
         for e in E:
             self.add_edge(e)
-
-    def Testing(self):
-        return self._V, self._neighbors
-
 
     def add_vertex(self, v):
         self._V.add(v)
