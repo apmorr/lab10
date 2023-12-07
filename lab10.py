@@ -37,7 +37,7 @@ class EdgeSet:
 class AdjacencySet:
     def __init__(self, V, E):
         self._V = set()
-        self._neighbors = {}
+        self._neighbors = ()
         for v in V:
             self.add_vertex(v)
         for e in E:
