@@ -83,7 +83,7 @@ class Graph_ES(EdgeSet):
     def edges(self):
         return iter(self._E)
 
-    def __contains__(self, v):
+    def __iter__(self, v):
         return v in self._V
 
     def __len__(self):
@@ -101,7 +101,7 @@ class Graph_AS(AdjacencySet):
             for v in self._neighbors[u]:
                 yield (u, v)
 
-    def __contains__(self, v):
+    def __iter__(self, v):
         return v in self._V
 
     def __len__(self):
