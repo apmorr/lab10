@@ -1,5 +1,5 @@
 import unittest
-from Lab10 import Graph_AS, Graph_ES
+from lab10 import Graph_AS, Graph_ES
 
 class test_GraphES(unittest.TestCase):
     def setUp(self):
